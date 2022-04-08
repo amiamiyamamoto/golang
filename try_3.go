@@ -1,48 +1,62 @@
 package main
 
+type MyInt int
+
+func (n *MyInt) Inc() {
+	*n++
+}
+
 func main() {
-	// var sum float32
-	// sum = 5 + 6 + 3
-	// avg := sum / 3
-	// if avg > 4.5 {
-	// 	println("good")
-	// }
-
-	// var a, b, c bool
-	// a, b, c = true, false, true
-	// if a && b || !c {
-	// 	println("true\n")
-	// } else {
-	// 	println("false\n")
-	// }
-
-	// type gamePoint struct {
-	// 	point int
-	// 	user  string
-	// }
-	// type Score struct {
-	// 	UserID string
-	// 	GameID int
-	// 	Point  int
-	// }
-
-	// try3()
-
-	for i := 1; i <= 100; i++ {
-		print(i)
-		if isOdd(i) {
-			println("-奇数")
-		} else {
-			println("-偶数")
-		}
+	{
+		var n MyInt
+		println(n)
+		n.Inc()
+		println(n)
 	}
+	{
+		var sum float32
+		sum = 5 + 6 + 3
+		avg := sum / 3
+		if avg > 4.5 {
+			println("good")
+		}
 
-	// n, m := swap(10, 20)
-	// println(n, m)
-	n, m := 10, 20
-	swap2(&n, &m)
-	println(n, m)
+		var a, b, c bool
+		a, b, c = true, false, true
+		if a && b || !c {
+			println("true\n")
+		} else {
+			println("false\n")
+		}
 
+		type gamePoint struct {
+			point int
+			user  string
+		}
+		type Score struct {
+			UserID string
+			GameID int
+			Point  int
+		}
+
+		try3()
+	}
+	{
+		for i := 1; i <= 100; i++ {
+			print(i)
+			if isOdd(i) {
+				println("-奇数")
+			} else {
+				println("-偶数")
+			}
+		}
+
+		// n, m := swap(10, 20)
+		// println(n, m)
+		n, m := 10, 20
+		swap2(&n, &m)
+		println(n, m)
+	}
 }
 
 func try3() {
@@ -76,7 +90,5 @@ func swap(n int, m int) (int, int) {
 }
 
 func swap2(n *int, m *int) {
-	tmp := *n
-	*n = *m
-	*m = tmp
+	*n, *m = *m, *n
 }
