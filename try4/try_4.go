@@ -1,7 +1,12 @@
 package main
 
-import "greeting/greeting"
+import (
+	// myGreeting "greeting/greeting"
+
+	greeting "github.com/tenntenn/greeting"
+)
 
 func main() {
-	greeting.Do()
+	// myGreeting.Do()
+	println(greeting.Do())
 }
