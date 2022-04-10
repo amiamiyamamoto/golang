@@ -3,10 +3,12 @@ package main
 import (
 	// myGreeting "greeting/greeting"
 
-	greeting "github.com/tenntenn/greeting"
+	"time"
+
+	greeting "github.com/tenntenn/greeting/v2"
 )
 
 func main() {
 	// myGreeting.Do()
-	println(greeting.Do())
+	println(greeting.Do(time.Now()))
 }
