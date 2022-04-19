@@ -5,10 +5,12 @@ import (
 	"flag"
 	"fmt"
 	"os"
+	"strconv"
 )
 
 // var msg = flag.String("msg", "デフォルト値", "説明")
 var n = flag.Bool("n", false, "line number option")
+var num int64
 
 // func init() {
 // 	//ポインタを指定して設定を予約
@@ -17,11 +19,14 @@ var n = flag.Bool("n", false, "line number option")
 
 func main() {
 	flag.Parse()
-	// fmt.Println(strings.Repeat(*msg, n))
+
+	//nオプションが付いている場合、numに数値をセットする
+	if *n {
+		num = 1
+	}
 
 	//引数の数だけループする
 	for _, arg := range flag.Args() {
-		// fmt.Println(arg)
 		err := readFile(arg)
 		if err != nil {
 			fmt.Println(err)
@@ -38,8 +43,14 @@ func readFile(fn string) error {
 		return err
 	}
 	s := bufio.NewScanner(f)
+	var line_num string
 	for s.Scan() {
-		fmt.Println(s.Text())
+		if num != 0 {
+			line_num = strconv.FormatInt(num, 10) + ": "
+			num++
+		}
+		fmt.Println(line_num, s.Text())
+
 	}
 	return nil
 }
