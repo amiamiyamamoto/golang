@@ -22,6 +22,7 @@ func (f File) isJpg() bool {
 
 // ファイルがjpgもしくはjpegだった場合にpngファイルに変換する
 func (f *File) changeJpgToPng() error {
+	// TODO:エラーの処理を追加する
 	if !f.isJpg() {
 		return errors.New("this file is not jpg.")
 	}
