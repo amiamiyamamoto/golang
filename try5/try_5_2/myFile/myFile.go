@@ -1,33 +1,46 @@
 package myFile
 
 import (
+	"errors"
 	"fmt"
 	"io/ioutil"
+	"os"
 	"path/filepath"
+	"strings"
 )
 
 type File string
 
 // .jpgもしくは.jpegファイルだった場合はtrueを返す
-func (f File) IsJpg() bool {
-	e := f.GetExt()
-	if e == ".jpg" || f == ".jpeg" {
+func (f File) isJpg() bool {
+	e := f.getExt()
+	if e == ".jpg" || e == ".jpeg" {
 		return true
 	}
 	return false
 }
 
-// func (f *File) changeJpgToPng()
+// ファイルがjpgもしくはjpegだった場合にpngファイルに変換する
+func (f *File) changeJpgToPng() error {
+	if !f.isJpg() {
+		return errors.New("this file is not jpg.")
+	}
+	nfn := strings.Replace(string(*f), f.getExt(), ".png", 1)
+	os.Rename(string(*f), nfn)
+	fmt.Println("convert: " + string(*f))
+	*f = File(nfn)
+	return nil
 
-// 拡張子を返す関数をつくる
-// IsJpgでこの関数を使う
-// changeJpgToPngメソッドをつくる→実際のファイル名操作、自身のファイル名を変更する
-func (f File) GetExt() string {
+}
+
+// file型の拡張子をピリオド付きで返す
+func (f File) getExt() string {
 	e := filepath.Ext(string(f))
 	return e
 }
 
-func PrintFile(dir string) {
+// 指定したディレクトリのjpgもしくはjpegファイルをpngファイルに変換する
+func ChangeFilesJpgToPng(dir string) {
 	files, err := ioutil.ReadDir(dir)
 	if err != nil {
 		fmt.Println(err)
@@ -35,13 +48,11 @@ func PrintFile(dir string) {
 	}
 	for _, file := range files {
 		if file.IsDir() {
-			PrintFile(dir + "/" + file.Name())
+			ChangeFilesJpgToPng(dir + "/" + file.Name())
 			continue
 		}
 		var cfile File = File(dir + "/" + file.Name())
-		fmt.Println(cfile.IsJpg())
-
-		fmt.Println(dir + "/" + file.Name())
+		cfile.changeJpgToPng()
 
 	}
 }
