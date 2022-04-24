@@ -2,6 +2,7 @@ package main
 
 import (
 	"flag"
+	"fmt"
 	myfile "myfile/myFile"
 )
 
@@ -9,6 +10,6 @@ func main() {
 	flag.Parse()
 	// args := flag.Args()
 
-	myfile.ChangeFilesJpgToPng(flag.Args()[0])
+	fmt.Println(myfile.ChangeFilesJpgToPng(flag.Args()[0]))
 
 }
