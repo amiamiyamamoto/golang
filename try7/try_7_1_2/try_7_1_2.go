@@ -1,12 +1,12 @@
 package main
 
 import (
-	"fmt"
-
-	"scanner/scanner"
+	"scanner/myscanner"
+	"strings"
 )
 
 func main() {
 
-	fmt.Println(scanner.Scanner())
+	// fmt.Println(myscanner.NewScanner(strings.NewReader("あいうえお")))
+	myscanner.NewScanner(strings.NewReader("あいうabc123"))
 }
