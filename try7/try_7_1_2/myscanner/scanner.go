@@ -28,11 +28,22 @@ func NewScanner(r io.Reader) *Scanner {
 	var s Scanner
 	s.reader = r
 	// スライスを確保
-	//どれくらいの長さになるか事前に確認したいが一旦20で固定
-	// 丁度いい長さのスライスを渡したい
-	p := make([]byte, 20)
-	_, err := r.Read(p)
-	fmt.Printf("%+v\n %+v", p, err)
+	var pl int = 2
+	tmp := make([]byte, pl)
+	var p []byte
+	var len int = pl
+	var err error
+
+	for pl == len {
+		len, err = r.Read(tmp)
+
+		// 取得した値をpにappendしていきたいけどエラ
+		append(p, tmp[:2])
+		fmt.Printf("%+v\n %+v\n\n\n\n\n", p, err)
+
+	}
+	//TODO:取得した[]byteを　string → rune に変換してScannerに代入する
+	fmt.Println(len)
 
 	for _, byte := range p {
 		// fmt.Println(string(byte))
