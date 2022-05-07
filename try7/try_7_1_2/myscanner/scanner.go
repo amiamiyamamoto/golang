@@ -28,7 +28,8 @@ func NewScanner(r io.Reader) *Scanner {
 	var s Scanner
 	s.reader = r
 	// スライスを確保
-	var pl int = 2
+	var pl int = 100
+	println(pl)
 	tmp := make([]byte, pl)
 	var p []byte
 	var len int = pl
@@ -37,9 +38,11 @@ func NewScanner(r io.Reader) *Scanner {
 	for pl == len {
 		len, err = r.Read(tmp)
 
-		// 取得した値をpにappendしていきたいけどエラ
-		append(p, tmp[:2])
+		// 取得した値をpに追加する
+		p = append(p, tmp[:len]...)
+
 		fmt.Printf("%+v\n %+v\n\n\n\n\n", p, err)
+		// fmt.Println(tmp)
 
 	}
 	//TODO:取得した[]byteを　string → rune に変換してScannerに代入する
