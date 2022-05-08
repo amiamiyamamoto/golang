@@ -6,10 +6,11 @@ import (
 )
 
 type Scanner struct {
-	rune    rune
-	reader  io.Reader
-	length  uint // 受け取った文字列長を格納
-	current uint // 現在読み込んでいる文字位置を格納
+	// rune    rune
+	data    []byte
+	reader  io.Reader //いらないかも
+	length  uint      // 受け取った文字列長を格納
+	current uint      // 現在読み込んでいる文字位置を格納
 }
 
 // スキャンする文字がまだある場合はtrueを返す
@@ -24,7 +25,7 @@ func (s *Scanner) Text() string {
 }
 
 // io.Readerを受け取り、Scannerのポインタを返す
-func NewScanner(r io.Reader) *Scanner {
+func NewScanner(r io.Reader) (*Scanner, error){
 	var s Scanner
 	s.reader = r
 	// スライスを確保
@@ -37,6 +38,10 @@ func NewScanner(r io.Reader) *Scanner {
 
 	for pl == len {
 		len, err = r.Read(tmp)
+
+		if err != nil {
+			return nil err
+		}
 
 		// 取得した値をpに追加する
 		p = append(p, tmp[:len]...)
