@@ -7,7 +7,7 @@ import (
 
 type Scanner struct {
 	// rune    rune
-	data    []byte
+	Data    []byte
 	reader  io.Reader //いらないかも
 	length  uint      // 受け取った文字列長を格納
 	current uint      // 現在読み込んでいる文字位置を格納
@@ -25,7 +25,7 @@ func (s *Scanner) Text() string {
 }
 
 // io.Readerを受け取り、Scannerのポインタを返す
-func NewScanner(r io.Reader) (*Scanner, error){
+func NewScanner(r io.Reader) (*Scanner, error) {
 	var s Scanner
 	s.reader = r
 	// スライスを確保
@@ -40,7 +40,7 @@ func NewScanner(r io.Reader) (*Scanner, error){
 		len, err = r.Read(tmp)
 
 		if err != nil {
-			return nil err
+			return nil, err
 		}
 
 		// 取得した値をpに追加する
@@ -50,17 +50,18 @@ func NewScanner(r io.Reader) (*Scanner, error){
 		// fmt.Println(tmp)
 
 	}
+	s.Data = p
 	//TODO:取得した[]byteを　string → rune に変換してScannerに代入する
-	fmt.Println(len)
+	// fmt.Println(len)
 
-	for _, byte := range p {
-		// fmt.Println(string(byte))
-		// fmt.Println(byte)
-		print(byte)
-		fmt.Sprintf("%s", p)
-	}
+	// for _, byte := range p {
+	// 	// fmt.Println(string(byte))
+	// 	// fmt.Println(byte)
+	// 	print(byte)
+	// 	fmt.Sprintf("%s", p)
+	// }
 
 	fmt.Println("\n" + string(p))
 
-	return &s
+	return &s, nil
 }
