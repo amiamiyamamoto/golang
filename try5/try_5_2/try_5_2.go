@@ -4,6 +4,7 @@ import (
 	"flag"
 	"fmt"
 	myfile "myfile/myFile"
+	"os"
 )
 
 func main() {
@@ -11,5 +12,8 @@ func main() {
 	// args := flag.Args()
 
 	fmt.Println(myfile.ChangeFilesJpgToPng(flag.Args()[0]))
+	if err := myfile.ChangeFilesJpgToPng(flag.Args()[0]); err != nil {
+		fmt.Fprintln(os.Stderr, err)
+	}
 
 }
