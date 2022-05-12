@@ -1,7 +1,6 @@
 package myscanner
 
 import (
-	"fmt"
 	"io"
 	"unicode/utf8"
 )
@@ -57,9 +56,6 @@ func NewScanner(r io.Reader) *Scanner {
 
 		// 取得した値をpに追加する
 		p = append(p, tmp[:len]...)
-
-		fmt.Printf("%+v\n %+v\n\n\n\n\n", p, err)
-		// fmt.Println(tmp)
 
 	}
 	// strに直してscannerに代入

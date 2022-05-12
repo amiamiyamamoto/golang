@@ -29,8 +29,4 @@ func readMyScanner() {
 	if err := scanner.Err(); err != nil {
 		fmt.Fprintln(os.Stderr, err)
 	}
-	// NewScannerではエラーを返さない
-	// readメソッドでエラーがあった場合は、Scanner structにエラー値をもたせるconst
-	// エラーを保持している場合は、Scanメソッドはfalseを返す
-	// Errメソッドを作成して、どうやって返せばいいんだ？
 }
