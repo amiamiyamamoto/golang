@@ -72,6 +72,10 @@ func NewScanner(r io.Reader) *Scanner {
 	return &s
 }
 
+func (s Scanner) Err() error {
+	return s.error
+}
+
 func getRuneAt(s string, i uint) rune {
 	rs := []rune(s)
 	return rs[i]
