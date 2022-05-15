@@ -1,4 +1,4 @@
-package main_test
+package main
 
 import "testing"
 
@@ -15,7 +15,7 @@ func TestIsEven(t *testing.T) {
 
 	for _, c := range cases {
 		t.Run(c.name, func(t *testing.T) {
-			if actual := main.IsEven(c.in); c.out != actual {
+			if actual := isEven(c.in); c.out != actual {
 				t.Errorf("なんか違う")
 			}
 		})
