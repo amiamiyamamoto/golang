@@ -17,7 +17,7 @@ func main() {
 
 func input(r io.Reader) <-chan string {
 	//TODO: チャネルをつくる
-	var ch chan string
+	var ch = make(chan string)
 	go func() {
 		s := bufio.NewScanner(r)
 		for s.Scan() {
