@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"time"
 )
 
 func main() {
@@ -12,6 +13,13 @@ func main() {
 	for _, w := range words {
 		fmt.Println(w)
 	}
+
+	//TODO 一分経ったら標準出力に「終了」の文字を表示させる
+	go func() {
+		time.Sleep(5 * time.Second)
+		fmt.Println("終了")
+	}()
+
 	// 標準入力に一行受け取る
 	ch := input(os.Stdin)
 
@@ -25,8 +33,6 @@ func main() {
 		}
 	}
 	// 制限時間内に難問解けたか表示する
-	//TODO 一分経ったら標準出力に「終了」の文字を表示させる
-
 }
 
 func input(r io.Reader) <-chan string {
