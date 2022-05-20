@@ -15,23 +15,40 @@ func main() {
 	}
 
 	//TODO 一分経ったら標準出力に「終了」の文字を表示させる
-	go func() {
-		time.Sleep(5 * time.Second)
-		fmt.Println("終了")
-	}()
+	// go func() {
+	// 	time.Sleep(5 * time.Second)
+	// 	fmt.Println("終了")
+	// }()
 
 	// 標準入力に一行受け取る
 	ch := input(os.Stdin)
 
-	for {
+	select {
+	case m := <-ch:
+
 		fmt.Print(">")
-		// fmt.Print(<-ch)
 		// 受け取った単語が単語リスト内に含まれているかチェック
-		if wordlistSearch(<-ch) {
+		if wordlistSearch(m) {
 			fmt.Println("OK")
-			correct++
+			point++
 		}
+
+		// fmt.Println(point)
+	case <-time.After(5 * time.Second):
+		fmt.Println("\ntime out!")
+		fmt.Println(point)
+		break
 	}
+
+	// for {
+	// 	fmt.Print(">")
+	// 	// 受け取った単語が単語リスト内に含まれているかチェック
+	// 	if wordlistSearch(<-ch) {
+	// 		fmt.Println("OK")
+	// 		point++
+	// 	}
+	// 	fmt.Println(point)
+	// }
 	// 制限時間内に難問解けたか表示する
 }
 
@@ -58,7 +75,7 @@ func wordlistSearch(w string) bool {
 }
 
 // 正答数をカウントする
-var correct int
+var point int
 
 // 単語リスト
 var words = []string{
@@ -83,3 +100,5 @@ var words = []string{
 	"play",
 	"stop",
 }
+
+// TODO: 同じ単語を2回入力しても点数は最初の1点のみにする
