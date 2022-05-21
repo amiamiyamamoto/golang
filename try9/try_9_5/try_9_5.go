@@ -23,21 +23,25 @@ func main() {
 	// 標準入力に一行受け取る
 	ch := input(os.Stdin)
 
-	select {
-	case m := <-ch:
+L:
+	for {
+		select {
+		case m := <-ch:
 
-		fmt.Print(">")
-		// 受け取った単語が単語リスト内に含まれているかチェック
-		if wordlistSearch(m) {
-			fmt.Println("OK")
-			point++
+			fmt.Print(">")
+			// 受け取った単語が単語リスト内に含まれているかチェック
+			if wordlistSearch(m) {
+				fmt.Println("OK")
+				point++
+			}
+
+			// fmt.Println(point)
+		case <-time.After(5 * time.Second):
+			fmt.Println("\ntime out!")
+			fmt.Println(point)
+			break L
 		}
 
-		// fmt.Println(point)
-	case <-time.After(5 * time.Second):
-		fmt.Println("\ntime out!")
-		fmt.Println(point)
-		break
 	}
 
 	// for {
