@@ -23,6 +23,8 @@ func main() {
 	// 標準入力に一行受け取る
 	ch := input(os.Stdin)
 
+	tm := time.After(5 * time.Second)
+
 L:
 	for {
 		select {
@@ -36,7 +38,7 @@ L:
 			}
 
 			// fmt.Println(point)
-		case <-time.After(5 * time.Second):
+		case <-tm:
 			fmt.Println("\ntime out!")
 			fmt.Println(point)
 			break L
