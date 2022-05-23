@@ -14,12 +14,6 @@ func main() {
 		fmt.Println(w)
 	}
 
-	//TODO 一分経ったら標準出力に「終了」の文字を表示させる
-	// go func() {
-	// 	time.Sleep(5 * time.Second)
-	// 	fmt.Println("終了")
-	// }()
-
 	// 標準入力に一行受け取る
 	ch := input(os.Stdin)
 
@@ -32,7 +26,7 @@ L:
 
 			fmt.Print(">")
 			// 受け取った単語が単語リスト内に含まれているかチェック
-			if wordlistSearch(m) {
+			if checkWord(m) {
 				fmt.Println("OK")
 				point++
 			}
@@ -46,16 +40,6 @@ L:
 
 	}
 
-	// for {
-	// 	fmt.Print(">")
-	// 	// 受け取った単語が単語リスト内に含まれているかチェック
-	// 	if wordlistSearch(<-ch) {
-	// 		fmt.Println("OK")
-	// 		point++
-	// 	}
-	// 	fmt.Println(point)
-	// }
-	// 制限時間内に難問解けたか表示する
 }
 
 func input(r io.Reader) <-chan string {
@@ -71,13 +55,28 @@ func input(r io.Reader) <-chan string {
 }
 
 // 単語リストに含まれているかチェックする関数
-func wordlistSearch(w string) bool {
-	for _, word := range words {
+func wordlistSearch(w string, l []string) bool {
+	for _, word := range l {
 		if word == w {
 			return true
 		}
 	}
 	return false
+}
+
+// 入力された単語が正解かどうかを判定する関数
+func checkWord(w string) bool {
+	//単語リストに含まれていなければ不正解
+	if !wordlistSearch(w, words) {
+		return false
+	}
+	//入力済み単語リストに含まれている場合不正解
+	if wordlistSearch(w, inw) {
+		return false
+	}
+	//正解の場合、inwに単語を追加する
+	inw = append(inw, w)
+	return true
 }
 
 // 正答数をカウントする
@@ -108,3 +107,4 @@ var words = []string{
 }
 
 // TODO: 同じ単語を2回入力しても点数は最初の1点のみにする
+var inw = []string{}
