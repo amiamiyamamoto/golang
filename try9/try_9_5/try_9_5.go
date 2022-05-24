@@ -106,5 +106,5 @@ var words = []string{
 	"stop",
 }
 
-// TODO: 同じ単語を2回入力しても点数は最初の1点のみにする
+// 正解した単語を収容するスライス
 var inw = []string{}
