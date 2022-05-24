@@ -16,7 +16,7 @@ func main() {
 
 	// 標準入力に一行受け取る
 	ch := input(os.Stdin)
-
+	// 制限時間を設定
 	tm := time.After(5 * time.Second)
 
 L:
