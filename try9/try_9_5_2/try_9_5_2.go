@@ -17,8 +17,18 @@ func main() {
 }
 
 func download(url string, fn string) error {
+	client := &http.Client{ // CheckRedirect: redirectPolicyFunc,
+	}
 
-	resp, err := http.Get(url)
+	// rangeで分割して複数回ダウンロードする
+	// 0-500, 501-1000, 1001-1500
+	for _, num := range []int{1, 2, 3} {
+
+	}
+	req, err := http.NewRequest("GET", url, nil)
+	req.Header.Add("Range", "bytes=9999999990-9999999999")
+
+	resp, err := client.Do(req)
 	if err != nil {
 		return err
 	}
