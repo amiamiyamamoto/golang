@@ -18,11 +18,11 @@ func main() {
 
 func download(url string, fn string) error {
 
-	res, err := http.Get(url)
+	resp, err := http.Get(url)
 	if err != nil {
 		return err
 	}
-	defer res.Body.Close()
+	defer resp.Body.Close()
 
 	out, err := os.Create(fn)
 	if err != nil {
@@ -30,6 +30,6 @@ func download(url string, fn string) error {
 	}
 	defer out.Close()
 
-	_, err = io.Copy(out, res.Body)
+	_, err = io.Copy(out, resp.Body)
 	return err
 }
