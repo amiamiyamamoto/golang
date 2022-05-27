@@ -30,10 +30,12 @@ func download(url string, fn string) error {
 		c = r + 1
 	}
 
+	// TODO:Doもfor内で実行する
 	resp, err := client.Do(req)
 	if err != nil {
 		return err
 	}
+	// TODO:for内でdeferしないよう関数化する
 	defer resp.Body.Close()
 
 	out, err := os.Create(fn)
