@@ -21,8 +21,8 @@ func download(url string, fn string) error {
 	}
 
 	// rangeで分割して複数回ダウンロードする
-	r := 500
-	c := 0
+	r := 500 // 分割するサイズ
+	c := 0   // 現在位置
 	// 0-500, 501-1000, 1001-1500
 	for _, num := range []int{1, 2, 3} {
 		req, err := http.NewRequest("GET", url, nil)
@@ -46,4 +46,8 @@ func download(url string, fn string) error {
 
 	_, err = io.Copy(out, resp.Body)
 	return err
+}
+
+func rangeReq() {
+
 }
