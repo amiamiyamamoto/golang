@@ -55,13 +55,11 @@ func rangeReq(url string, r uint, c uint) (*http.Response, error) {
 	req.Header.Add("Range", "bytes="+strconv.Itoa(c)+"-"+strconv.Itoa(c+r))
 	c = c + r + 1
 
-	// TODO:Doもfor内で実行する
 	resp, err := client.Do(req)
 	if err != nil {
 		return nil, err
 	}
 	fmt.Println(resp.Status)
-	// TODO:for内でdeferしないよう関数化する
 	defer resp.Body.Close()
 	return resp, nil
 }
