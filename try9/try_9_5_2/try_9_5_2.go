@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"io"
 	"net/http"
 	"os"
 	"strconv"
@@ -24,6 +23,12 @@ func download(url string, fn string) error {
 	var c uint = 0      // 現在位置
 	// var resp *http.Response
 
+	out, err := os.Create(fn)
+	if err != nil {
+		return err
+	}
+	defer out.Close()
+
 	// status code 406でforを終了させる
 	for _, _ = range []int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10} {
 		resp, err := rangeReq(url, r, c)
@@ -33,17 +38,21 @@ func download(url string, fn string) error {
 		if resp.StatusCode == 406 {
 			break
 		}
+		a := resp.Body
+		out.Write([]byte(a))
+		// out.Write(resp.Body)
 	}
 
-	out, err := os.Create(fn)
-	if err != nil {
-		return err
-	}
-	defer out.Close()
-
-	_, err = io.Copy(out, resp.Body)
-	return err
+	// _, err = io.Copy(out, resp.Body)
+	return nil
 }
+
+// 分割したあと、どうファイルを結合するか？
+// ゴルーチンを使うとしたら分割されたレスポンスを正しく並べ替えしないと
+// そもそも取得したデータはどこにある？
+// まずは同期処理で考えてみる。
+// 非同期処理をしたとき、何番目の処理なのかももちろんそうだけど、結局は変数に入れられないし保持しないといけないからファイルに書き出さないといけないかも
+// 非同期処理をしたときは、それが何番目の処理なのかを記録しておかないとならん
 
 func rangeReq(url string, r uint, c uint) (*http.Response, error) {
 	client := &http.Client{ // CheckRedirect: redirectPolicyFunc,
