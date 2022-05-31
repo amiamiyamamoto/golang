@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"io"
 	"net/http"
 	"os"
 	"strconv"
@@ -30,7 +31,7 @@ func download(url string, fn string) error {
 	defer out.Close()
 
 	// status code 406でforを終了させる
-	for _, _ = range []int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10} {
+	for i, _ = range []int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10} {
 		resp, err := rangeReq(url, r, c)
 		if err != nil {
 			return err
@@ -38,12 +39,13 @@ func download(url string, fn string) error {
 		if resp.StatusCode == 406 {
 			break
 		}
-		a := resp.Body
+		a := resp.Body //resp.Bodyを[]byte型にする
+
 		out.Write([]byte(a))
 		// out.Write(resp.Body)
 	}
 
-	// _, err = io.Copy(out, resp.Body)
+	_, err = io.Copy(out, resp.Body)
 	return nil
 }
 
