@@ -31,7 +31,8 @@ func download(url string, fn string) error {
 	defer out.Close()
 
 	// status code 406でforを終了させる
-	for i, _ = range []int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10} {
+	// for i, _ = range []int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10} {
+	for {
 		resp, err := rangeReq(url, r, c)
 		if err != nil {
 			return err
