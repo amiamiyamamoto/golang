@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"io"
 	"net/http"
 	"os"
 	"strconv"
@@ -20,8 +19,8 @@ func main() {
 func download(url string, fn string) error {
 
 	// rangeで分割して複数回ダウンロードする
-	var r uint = 100000 // 分割するサイズ
-	var c uint = 0      // 現在位置
+	var r uint = 1000000000 // 分割するサイズ
+	var c uint = 0          // 現在位置
 	// var resp *http.Response
 
 	out, err := os.Create(fn)
@@ -37,16 +36,23 @@ func download(url string, fn string) error {
 		if err != nil {
 			return err
 		}
-		if resp.StatusCode == 406 {
+		if resp.StatusCode != int(206) {
 			break
 		}
 		a := resp.Body //resp.Bodyを[]byte型にする
 
-		out.Write([]byte(a))
+		file, err := os.OpenFile(fn, os.O_WRONLY|os.O_CREATE, 0666)
+		if err != nil {
+			return err
+		}
+		defer file.Close()
+		fmt.Fprintln(file, a)
+
+		// out.Write([]byte(a))
 		// out.Write(resp.Body)
 	}
 
-	_, err = io.Copy(out, resp.Body)
+	// _, err = io.Copy(out, resp.Body)
 	return nil
 }
 
@@ -64,7 +70,7 @@ func rangeReq(url string, r uint, c uint) (*http.Response, error) {
 	if err != nil {
 		return nil, err
 	}
-	req.Header.Add("Range", "bytes="+strconv.Itoa(c)+"-"+strconv.Itoa(c+r))
+	req.Header.Add("Range", "bytes="+strconv.FormatUint(uint64(c), 10)+"-"+strconv.FormatUint(uint64(c+r), 10))
 	c = c + r + 1
 
 	resp, err := client.Do(req)
