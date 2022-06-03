@@ -19,8 +19,8 @@ func main() {
 func download(url string, fn string) error {
 
 	// rangeで分割して複数回ダウンロードする
-	var r uint = 1000000000 // 分割するサイズ
-	var c uint = 0          // 現在位置
+	var r uint = 500000000 // 分割するサイズ
+	var c uint = 0         // 現在位置
 	// var resp *http.Response
 
 	out, err := os.Create(fn)
@@ -29,23 +29,27 @@ func download(url string, fn string) error {
 	}
 	defer out.Close()
 
-	// status code 406でforを終了させる
-	// for i, _ = range []int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10} {
 	for {
+		// リクエストを飛ばしてデータを取得
 		resp, err := rangeReq(url, r, c)
+		c = c + r + 1
 		if err != nil {
 			return err
 		}
 		if resp.StatusCode != int(206) {
 			break
 		}
-		a := resp.Body //resp.Bodyを[]byte型にする
+
+		// 取得したデータをファイルに書き込む
+		// TODO:ファイルに書き込む関数を作ってdeferを関数内に移動させる
+		a := resp.Body
 
 		file, err := os.OpenFile(fn, os.O_WRONLY|os.O_CREATE, 0666)
 		if err != nil {
 			return err
 		}
 		defer file.Close()
+		// file.Write(a)
 		fmt.Fprintln(file, a)
 
 		// out.Write([]byte(a))
@@ -56,12 +60,8 @@ func download(url string, fn string) error {
 	return nil
 }
 
-// 分割したあと、どうファイルを結合するか？
-// ゴルーチンを使うとしたら分割されたレスポンスを正しく並べ替えしないと
-// そもそも取得したデータはどこにある？
-// まずは同期処理で考えてみる。
-// 非同期処理をしたとき、何番目の処理なのかももちろんそうだけど、結局は変数に入れられないし保持しないといけないからファイルに書き出さないといけないかも
-// 非同期処理をしたときは、それが何番目の処理なのかを記録しておかないとならん
+// 取得したio.ReadCloserをどうファイルに「追記」するのか？
+// for文でまたdeferが入ってるから関数化しなきゃ
 
 func rangeReq(url string, r uint, c uint) (*http.Response, error) {
 	client := &http.Client{ // CheckRedirect: redirectPolicyFunc,
@@ -71,7 +71,6 @@ func rangeReq(url string, r uint, c uint) (*http.Response, error) {
 		return nil, err
 	}
 	req.Header.Add("Range", "bytes="+strconv.FormatUint(uint64(c), 10)+"-"+strconv.FormatUint(uint64(c+r), 10))
-	c = c + r + 1
 
 	resp, err := client.Do(req)
 	if err != nil {
