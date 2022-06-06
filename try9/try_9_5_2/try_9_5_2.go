@@ -23,11 +23,11 @@ func download(url string, fn string) error {
 	var c uint = 0         // 現在位置
 	// var resp *http.Response
 
-	out, err := os.Create(fn)
+	f, err := os.Create(fn)
 	if err != nil {
 		return err
 	}
-	defer out.Close()
+	defer f.Close()
 
 	for {
 		// リクエストを飛ばしてデータを取得
@@ -42,22 +42,31 @@ func download(url string, fn string) error {
 
 		// 取得したデータをファイルに書き込む
 		// TODO:ファイルに書き込む関数を作ってdeferを関数内に移動させる
-		a := resp.Body
 
-		file, err := os.OpenFile(fn, os.O_WRONLY|os.O_CREATE, 0666)
-		if err != nil {
+		if err := postscript(fn, resp); err != nil {
 			return err
 		}
-		defer file.Close()
-		// file.Write(a)
-		fmt.Fprintln(file, a)
 
-		// out.Write([]byte(a))
-		// out.Write(resp.Body)
+		// f.Write([]byte(a))
+		// f.Write(resp.Body)
 	}
 
-	// _, err = io.Copy(out, resp.Body)
+	// _, err = io.Copy(f, resp.Body)
 	return nil
+}
+
+func postscript(fn string, resp *http.Response) error {
+	a := resp.Body
+
+	file, err := os.OpenFile(fn, os.O_WRONLY|os.O_CREATE, 0666)
+	if err != nil {
+		return err
+	}
+	defer file.Close()
+	// file.Write(a)
+	fmt.Fprintln(file, a) //書き込みってこれであってんの？？なにこれ
+	return nil
+
 }
 
 // 取得したio.ReadCloserをどうファイルに「追記」するのか？
