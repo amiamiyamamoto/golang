@@ -41,8 +41,6 @@ func download(url string, fn string) error {
 		}
 
 		// 取得したデータをファイルに書き込む
-		// TODO:ファイルに書き込む関数を作ってdeferを関数内に移動させる
-
 		if err := postscript(fn, resp); err != nil {
 			return err
 		}
@@ -68,9 +66,6 @@ func postscript(fn string, resp *http.Response) error {
 	return nil
 
 }
-
-// 取得したio.ReadCloserをどうファイルに「追記」するのか？
-// for文でまたdeferが入ってるから関数化しなきゃ
 
 func rangeReq(url string, r uint, c uint) (*http.Response, error) {
 	client := &http.Client{ // CheckRedirect: redirectPolicyFunc,
