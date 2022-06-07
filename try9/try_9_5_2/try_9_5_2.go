@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"io/ioutil"
 	"net/http"
 	"os"
 	"strconv"
@@ -55,6 +56,7 @@ func download(url string, fn string) error {
 
 func postscript(fn string, resp *http.Response) error {
 	a := resp.Body
+	defer a.Close()
 
 	file, err := os.OpenFile(fn, os.O_WRONLY|os.O_CREATE, 0666)
 	if err != nil {
@@ -62,6 +64,11 @@ func postscript(fn string, resp *http.Response) error {
 	}
 	defer file.Close()
 	// file.Write(a)
+	byte, err := ioutil.ReadAll(a)
+	if err != nil {
+		return err
+	}
+	file.Write(byte)
 	fmt.Fprintln(file, a) //書き込みってこれであってんの？？なにこれ
 	return nil
 
