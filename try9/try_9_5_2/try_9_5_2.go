@@ -69,7 +69,7 @@ func postscript(fn string, resp *http.Response) error {
 		return err
 	}
 	file.Write(byte)
-	fmt.Fprintln(file, a) //書き込みってこれであってんの？？なにこれ
+	fmt.Fprintln(file, a)
 	return nil
 
 }
