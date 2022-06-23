@@ -20,41 +20,41 @@ func main() {
 func download(url string, fn string) error {
 
 	// リクエストを飛ばしてデータを取得
-	resp, err := rangeReq(url, 0, 50000000)
-	if err != nil {
-		return err
+	i := 0
+	for {
+		resp, err := rangeReq(url, uint(i), uint(i+300))
+		i = i + 1 + 300
+		if err != nil {
+			return err
+		}
+		//データを取得し終えたらforを離脱
+		if resp.StatusCode != int(206) {
+			break
+		}
+		// ファイルに書き込み
+		if err := postscript(fn, resp); err != nil {
+			return err
+		}
 	}
+
+	return nil
+}
+
+func postscript(fn string, resp *http.Response) error {
 
 	body, err := ioutil.ReadAll(resp.Body)
 	defer resp.Body.Close()
 
 	if err != nil {
-		fmt.Println(err)
+		return err
 	}
-	fmt.Println(body)
-	return nil
-}
-
-func postscript(fn string, resp *http.Response) error {
-	a := resp.Body
-	defer a.Close()
 
 	file, err := os.OpenFile(fn, os.O_APPEND|os.O_WRONLY, 0666)
 	if err != nil {
 		return err
 	}
 	defer file.Close()
-	// file.Write(a)
-	byte, err := ioutil.ReadAll(a)
-	if err != nil {
-		return err
-	}
-
-	fmt.Println(byte)
-	fmt.Println(a)
-	file.Write(byte)
-	// fmt.Fprintln(file, a)
-	fmt.Fprintln(file, "aaaaa")
+	fmt.Fprintln(file, body)
 	return nil
 
 }
