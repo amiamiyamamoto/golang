@@ -43,18 +43,23 @@ func download(url string, fn string) error {
 func postscript(fn string, resp *http.Response) error {
 
 	body, err := ioutil.ReadAll(resp.Body)
+	// _ = body
 	defer resp.Body.Close()
 
 	if err != nil {
 		return err
 	}
 
-	file, err := os.OpenFile(fn, os.O_APPEND|os.O_WRONLY, 0666)
+	file, err := os.OpenFile(fn, os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
 	if err != nil {
 		return err
 	}
 	defer file.Close()
-	fmt.Fprintln(file, body)
+
+	fmt.Println(resp.Header["Content-Type"])
+	file.Write(body)
+	// fmt.Fprintln(file, body)
+	// io.Copy(file, resp.Body)
 	return nil
 
 }
