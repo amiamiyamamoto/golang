@@ -1,11 +1,15 @@
 package main
 
 import (
+	"bytes"
 	"fmt"
 	"io/ioutil"
 	"net/http"
 	"os"
 	"strconv"
+
+	"golang.org/x/text/encoding/japanese"
+	"golang.org/x/text/transform"
 )
 
 func main() {
@@ -43,9 +47,11 @@ func download(url string, fn string) error {
 func postscript(fn string, resp *http.Response) error {
 
 	body, err := ioutil.ReadAll(resp.Body)
-	// _ = body
 	defer resp.Body.Close()
-
+	if err != nil {
+		return err
+	}
+	utf8_body, err := encodeUtf8(body)
 	if err != nil {
 		return err
 	}
@@ -56,12 +62,14 @@ func postscript(fn string, resp *http.Response) error {
 	}
 	defer file.Close()
 
-	fmt.Println(resp.Header["Content-Type"])
-	file.Write(body)
-	// fmt.Fprintln(file, body)
-	// io.Copy(file, resp.Body)
+	file.Write(utf8_body)
 	return nil
 
+}
+
+func encodeUtf8(byte []byte) ([]byte, error) {
+	utf8_body := transform.NewReader(bytes.NewReader(byte), japanese.ShiftJIS.NewDecoder())
+	return ioutil.ReadAll(utf8_body)
 }
 
 func rangeReq(url string, s uint, e uint) (*http.Response, error) {
